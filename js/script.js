@@ -1,4 +1,9 @@
 // ==============================
+// STATE CONTROL (ANTI BUG)
+// ==============================
+let typingStarted = false;
+
+// ==============================
 // LOAD HTML COMPONENT (PARTIAL)
 // ==============================
 async function loadComponent(id, file) {
@@ -12,10 +17,7 @@ async function loadComponent(id, file) {
         const html = await res.text();
         document.getElementById(id).innerHTML = html;
 
-        // Jalankan script setelah load
-        if (id === "hero") {
-            startTyping();
-        }
+        console.log(`${id} loaded`);
 
     } catch (err) {
         console.error("ERROR:", err);
@@ -24,31 +26,42 @@ async function loadComponent(id, file) {
 
 
 // ==============================
-// TYPING EFFECT
+// TYPING EFFECT (FIXED)
 // ==============================
 function startTyping() {
+    if (typingStarted) return; // ❌ cegah double run
+    typingStarted = true;
+
     const text = ["Web Developer", "UI Designer", "Laravel Dev"];
-    let i = 0, j = 0;
-    let current = "";
+    let i = 0;
+    let j = 0;
     let del = false;
 
     function type() {
-        if (!del && j <= text[i].length) {
-            current = text[i].substring(0, j++);
-        } else if (del && j >= 0) {
-            current = text[i].substring(0, j--);
+        const el = document.getElementById("typing");
+        if (!el) return; // ❌ stop kalau elemen hilang
+
+        let current = text[i].substring(0, j);
+        el.innerHTML = current;
+
+        if (!del) {
+            j++;
+        } else {
+            j--;
         }
 
-        const el = document.getElementById("typing");
-        if (el) el.innerHTML = current;
+        if (j === text[i].length) {
+            del = true;
+            setTimeout(type, 800);
+            return;
+        }
 
-        if (j === text[i].length) del = true;
         if (j === 0 && del) {
             del = false;
             i = (i + 1) % text.length;
         }
 
-        setTimeout(type, del ? 50 : 100);
+        setTimeout(type, del ? 60 : 100);
     }
 
     type();
@@ -85,7 +98,7 @@ function handleNavbarScroll() {
 
 
 // ==============================
-// SCROLL ANIMATION (FIX KOSONG)
+// SCROLL ANIMATION
 // ==============================
 function scrollAnimation() {
     const sections = document.querySelectorAll(".section");
@@ -99,7 +112,6 @@ function scrollAnimation() {
             if (top < trigger) {
                 sec.classList.add("show");
 
-                // 🔥 Trigger skill animation pas about muncul
                 if (sec.classList.contains("about")) {
                     animateSkills();
                 }
@@ -108,12 +120,12 @@ function scrollAnimation() {
     }
 
     window.addEventListener("scroll", reveal);
-    reveal(); // langsung jalan saat load
+    reveal();
 }
 
 
 // ==============================
-// SKILL ANIMATION
+// SKILL BAR ANIMATION
 // ==============================
 function animateSkills() {
     const skills = document.querySelectorAll(".bar span");
@@ -154,23 +166,23 @@ function cursorGlow() {
 // ==============================
 // INIT SEMUA
 // ==============================
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
-    // Load component
-    loadComponent("navbar", "components/navbar.html");
-    loadComponent("hero", "components/hero.html");
-    loadComponent("footer", "components/footer.html");
+    // Load components
+    await loadComponent("navbar", "components/navbar.html");
+    await loadComponent("hero", "components/hero.html");
+    await loadComponent("footer", "components/footer.html");
 
-    // Delay biar DOM siap
+    // Init after DOM ready
     setTimeout(() => {
         handleNavbarScroll();
-        scrollAnimation(); // 🔥 WAJIB biar gak kosong
+        scrollAnimation();
+        startTyping(); // ✅ hanya sekali di sini
     }, 500);
 
-    // Cursor glow
     cursorGlow();
-
 });
+
 
 // ==============================
 // EMAILJS INIT
@@ -181,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // ==============================
-// CONTACT FORM SEND
+// CONTACT FORM
 // ==============================
 document.addEventListener("submit", function(e) {
     if (e.target.classList.contains("contact-form")) {
@@ -213,10 +225,17 @@ document.addEventListener("submit", function(e) {
         });
     }
 });
+
 console.log("JS jalan");
 
+// ==============================
+// TOAST
+// ==============================
 function showToast(message) {
     const toast = document.getElementById("toast");
+
+    if (!toast) return;
+
     toast.innerText = message;
     toast.classList.add("show");
 
