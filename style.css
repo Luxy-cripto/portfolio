@@ -1,15 +1,31 @@
 /* ================= GLOBAL ================= */
-* {
+*,
+*::before,
+*::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: #020617;
     color: white;
     overflow-x: hidden;
+}
+
+button,
+input,
+textarea {
+    font: inherit;
+}
+
+a {
+    color: inherit;
 }
 
 /* ================= BACKGROUND GLOW ================= */
@@ -21,6 +37,7 @@ body::after {
     height: 500px;
     filter: blur(180px);
     z-index: -1;
+    pointer-events: none;
     animation: moveGlow 10s infinite alternate;
 }
 
@@ -37,8 +54,8 @@ body::after {
 }
 
 @keyframes moveGlow {
-    0% { transform: translate(0,0); }
-    100% { transform: translate(50px,50px); }
+    0%   { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
 }
 
 /* ================= NAVBAR ================= */
@@ -52,7 +69,7 @@ header {
     top: 0;
     z-index: 1000;
     backdrop-filter: blur(10px);
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .logo {
@@ -105,6 +122,7 @@ nav a.active::after {
     height: 400px;
     filter: blur(150px);
     z-index: -1;
+    pointer-events: none;
 }
 
 .blur-bg::before {
@@ -151,35 +169,52 @@ nav a.active::after {
     line-height: 1.6;
 }
 
-/* ================= SOCIAL ================= */
+/* ================= SOCIAL (HERO) ================= */
 .social {
+    display: flex;
+    gap: 12px;
     margin-top: 15px;
 }
 
+.social a,
 .social i {
-    margin-right: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
     font-size: 20px;
+    font-style: normal;
+    text-decoration: none;
     cursor: pointer;
     transition: 0.3s;
 }
 
+.social a:hover,
 .social i:hover {
-    transform: scale(1.2);
-    color: #00f5c4;
+    transform: scale(1.15);
+    background: rgba(0, 245, 196, 0.2);
 }
 
 /* ================= BUTTON ================= */
 .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
     margin-top: 20px;
 }
 
 .btn {
+    display: inline-block;
     background: linear-gradient(45deg, #00f5c4, #7b2ff7);
     padding: 10px 20px;
+    border: none;
     border-radius: 20px;
     color: black;
     text-decoration: none;
-    margin-right: 10px;
+    cursor: pointer;
     transition: 0.3s;
 }
 
@@ -188,7 +223,15 @@ nav a.active::after {
     box-shadow: 0 0 20px #00f5c4;
 }
 
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
 .btn-outline {
+    display: inline-block;
     border: 1px solid #00f5c4;
     padding: 10px 20px;
     border-radius: 20px;
@@ -215,8 +258,8 @@ nav a.active::after {
     border-radius: 25px;
     overflow: hidden;
     position: relative;
-    box-shadow: 0 0 60px rgba(0,255,200,0.3);
-    transition: 0.4s;
+    box-shadow: 0 0 60px rgba(0, 255, 200, 0.3);
+    transition: scale 0.4s ease;
 }
 
 .card img {
@@ -224,8 +267,9 @@ nav a.active::after {
     display: block;
 }
 
+/* pakai `scale` (bukan transform) supaya tidak bentrok dengan animasi floating */
 .card:hover {
-    transform: scale(1.05);
+    scale: 1.05;
 }
 
 /* ================= OVERLAY ================= */
@@ -234,11 +278,12 @@ nav a.active::after {
     bottom: 0;
     width: 100%;
     padding: 12px;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: space-between;
     align-items: center;
     backdrop-filter: blur(5px);
+    text-align: left;
 }
 
 .card-overlay button {
@@ -255,18 +300,25 @@ nav a.active::after {
 }
 
 @keyframes float {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-25px); }
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-25px); }
 }
 
 /* ================= SECTION ================= */
 .section {
     padding: 100px 80px;
     text-align: center;
+    scroll-margin-top: 60px; /* supaya judul tidak tertutup header fixed */
+}
 
-    /* 🔥 FIX: jangan disembunyiin total */
-    opacity: 1;
-    transform: translateY(0);
+.section-title {
+    font-size: 34px;
+    margin-bottom: 10px;
+}
+
+.section-subtitle {
+    color: #aaa;
+    margin-bottom: 50px;
 }
 
 /* ================= ABOUT ================= */
@@ -283,17 +335,20 @@ nav a.active::after {
 
 .about-card {
     width: 280px;
+    margin: 0 auto;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 0 40px rgba(0,255,200,0.3);
+    box-shadow: 0 0 40px rgba(0, 255, 200, 0.3);
 }
 
 .about-card img {
     width: 100%;
+    display: block;
 }
 
 .about-right {
     flex: 1;
+    text-align: left;
 }
 
 .about-right h2 {
@@ -309,6 +364,11 @@ nav a.active::after {
     margin-bottom: 15px;
 }
 
+.skill p {
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
 .bar {
     background: #111;
     height: 8px;
@@ -321,113 +381,95 @@ nav a.active::after {
     height: 100%;
     width: 0;
     background: linear-gradient(90deg, #00f5c4, #7b2ff7);
-    transition: 1s;
+    transition: width 1.2s ease;
 }
 
-/* ================= RESPONSIVE ================= */
-@media (max-width: 900px) {
-    .hero {
-        flex-direction: column;
-        text-align: center;
-        padding: 120px 20px;
-    }
-
-    .right {
-        margin-top: 30px;
-    }
-
-    .left h1 {
-        font-size: 32px;
-    }
-
-    .about-container {
-        flex-direction: column;
-        text-align: center;
-    }
-}
 /* ================= PROJECT ================= */
-.project {
-    text-align: center;
-}
-
-.section-title {
-    font-size: 34px;
-    margin-bottom: 10px;
-}
-
-.section-subtitle {
-    color: #aaa;
-    margin-bottom: 50px;
-}
-
-/* GRID */
 .project-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 35px;
 }
 
-/* CARD */
 .project-card {
     position: relative;
     overflow: hidden;
     border-radius: 20px;
-    cursor: pointer;
     transition: 0.4s;
-    box-shadow: 0 0 30px rgba(0,255,200,0.15);
+    box-shadow: 0 0 30px rgba(0, 255, 200, 0.15);
 }
 
-/* IMAGE */
+.project-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 0 50px rgba(0, 255, 200, 0.4);
+}
+
+.project-img-wrapper {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+}
+
 .project-card img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
     transition: 0.5s;
 }
 
-/* HOVER IMAGE */
-.project-card:hover img {
+.project-card:hover img,
+.project-card:focus-within img {
     transform: scale(1.15);
     filter: brightness(0.6);
 }
 
-/* OVERLAY */
 .project-overlay {
     position: absolute;
+    left: 0;
     bottom: 0;
     width: 100%;
-    padding: 25px;
+    padding: 60px 25px 25px;
+    background: linear-gradient(to top, rgba(2, 6, 23, 0.95) 55%, rgba(2, 6, 23, 0));
     transform: translateY(100%);
     transition: 0.4s;
     text-align: left;
 }
 
-/* SHOW OVERLAY */
-.project-card:hover .project-overlay {
+.project-card:hover .project-overlay,
+.project-card:focus-within .project-overlay {
     transform: translateY(0);
 }
 
-/* TITLE */
+/* layar sentuh: overlay selalu tampil karena tidak ada hover */
+@media (hover: none) {
+    .project-overlay {
+        transform: none;
+    }
+}
+
 .project-overlay h3 {
     margin: 10px 0;
 }
 
-/* DESC */
 .project-overlay p {
     font-size: 14px;
     color: #ccc;
     margin-bottom: 10px;
 }
 
-/* TAG */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
 .tags span {
-    background: rgba(0,255,200,0.2);
+    background: rgba(0, 255, 200, 0.2);
     padding: 4px 10px;
     border-radius: 10px;
     font-size: 12px;
-    margin-right: 5px;
 }
 
-/* BUTTON */
 .btn-small {
     display: inline-block;
     padding: 6px 12px;
@@ -436,124 +478,40 @@ nav a.active::after {
     text-decoration: none;
     color: black;
     font-size: 12px;
-}
-
-/* HOVER CARD */
-.project-card:hover {
-    transform: translateY(-12px);
-    box-shadow: 0 0 50px rgba(0,255,200,0.4);
-}
-@media (max-width: 900px) {
-    .project-container {
-        grid-template-columns: 1fr;
-    }
-}
-/* ================= FOOTER ================= */
-.footer {
-    background: #020617;
-    padding: 80px 80px 20px;
-    position: relative;
-}
-
-/* GRID */
-.footer-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 40px;
-}
-
-/* COLUMN */
-.footer-col h3 {
-    margin-bottom: 15px;
-}
-
-.footer-col p,
-.footer-col a {
-    color: #aaa;
-    font-size: 14px;
-    text-decoration: none;
-}
-
-.footer-col a:hover {
-    color: #00f5c4;
-}
-
-/* MENU LIST */
-.footer-col ul {
-    list-style: none;
-}
-
-.footer-col ul li {
-    margin-bottom: 8px;
-}
-
-/* SOCIAL */
-.footer-social a {
-    margin-right: 10px;
-    font-size: 18px;
     transition: 0.3s;
 }
 
-.footer-social a:hover {
-    color: #00f5c4;
-    transform: scale(1.2);
+.btn-small:hover {
+    box-shadow: 0 0 15px rgba(0, 245, 196, 0.6);
 }
 
-/* BOTTOM */
-.footer-bottom {
-    text-align: center;
-    margin-top: 40px;
-    border-top: 1px solid #111;
-    padding-top: 20px;
-    font-size: 13px;
-    color: #777;
+.btn-small i {
+    margin-left: 4px;
 }
 
-/* GLOW EFFECT */
-.footer::before {
-    content: "";
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    background: #00f5c4;
-    filter: blur(150px);
-    opacity: 0.2;
-    top: -100px;
-    right: -100px;
-}
-
-/* ================= RESPONSIVE ================= */
-@media (max-width: 900px) {
-    .footer-container {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-}
-
-/* ================= CONTACT ULTRA ================= */
+/* ================= CONTACT ================= */
 .contact-wrapper {
     display: flex;
     gap: 40px;
     margin-top: 50px;
+    text-align: left;
 }
 
-/* CARD GLASS */
 .contact-card,
 .contact-info-card {
     flex: 1;
     padding: 30px;
     border-radius: 20px;
     backdrop-filter: blur(15px);
-    background: rgba(255,255,255,0.05);
-    box-shadow: 0 0 30px rgba(0,255,200,0.15);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 30px rgba(0, 255, 200, 0.15);
     transition: 0.4s;
 }
 
-/* HOVER CARD */
 .contact-card:hover,
 .contact-info-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 0 50px rgba(0,255,200,0.3);
+    box-shadow: 0 0 50px rgba(0, 255, 200, 0.3);
 }
 
 /* INPUT */
@@ -573,6 +531,21 @@ nav a.active::after {
     outline: none;
 }
 
+.input-group textarea {
+    resize: vertical;
+}
+
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+    color: transparent;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    border-color: #00f5c4;
+    box-shadow: 0 0 10px #00f5c4;
+}
+
 /* LABEL FLOAT */
 .input-group label {
     position: absolute;
@@ -580,26 +553,23 @@ nav a.active::after {
     top: 14px;
     color: #aaa;
     transition: 0.3s;
+    pointer-events: none;
 }
 
-/* FOCUS EFFECT 🔥 */
-.input-group input:focus,
-.input-group textarea:focus {
-    border-color: #00f5c4;
-    box-shadow: 0 0 10px #00f5c4;
-}
-
-/* LABEL ANIMATION */
 .input-group input:focus + label,
 .input-group textarea:focus + label,
-.input-group input:valid + label,
-.input-group textarea:valid + label {
+.input-group input:not(:placeholder-shown) + label,
+.input-group textarea:not(:placeholder-shown) + label {
     top: -8px;
     left: 10px;
     font-size: 12px;
     background: #020617;
     padding: 0 5px;
     color: #00f5c4;
+}
+
+.contact-form .btn {
+    width: 100%;
 }
 
 /* INFO */
@@ -618,18 +588,26 @@ nav a.active::after {
     margin-right: 10px;
 }
 
-.info-item p {
+.info-item p,
+.info-item a {
     color: #ccc;
+    text-decoration: none;
 }
 
-/* SOCIAL */
+.info-item a:hover {
+    color: #00f5c4;
+}
+
 .contact-social {
     margin-top: 20px;
 }
 
 .contact-social a {
+    display: inline-block;
     margin-right: 10px;
     font-size: 20px;
+    color: #fff;
+    text-decoration: none;
     transition: 0.3s;
 }
 
@@ -638,32 +616,63 @@ nav a.active::after {
     transform: scale(1.2);
 }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
-    .contact-wrapper {
-        flex-direction: column;
-    }
-}
-/* TOAST NOTIF */
-.toast {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: linear-gradient(45deg, #00f5c4, #7b2ff7);
-    color: black;
-    padding: 12px 20px;
-    border-radius: 10px;
-    opacity: 0;
-    transform: translateY(50px);
-    transition: 0.4s;
-    z-index: 9999;
+/* ================= FOOTER ================= */
+.footer {
+    background: #020617;
+    padding: 80px 80px 20px;
+    position: relative;
+    overflow: hidden;
 }
 
-/* SHOW */
-.toast.show {
-    opacity: 1;
-    transform: translateY(0);
+.footer::before {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: #00f5c4;
+    filter: blur(150px);
+    opacity: 0.2;
+    top: -100px;
+    right: -100px;
+    z-index: 0;
+    pointer-events: none;
 }
+
+.footer-container,
+.footer-bottom {
+    position: relative;
+    z-index: 1;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+}
+
+.footer-col h3 {
+    margin-bottom: 15px;
+}
+
+.footer-col p,
+.footer-col a {
+    color: #aaa;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.footer-col a:hover {
+    color: #00f5c4;
+}
+
+.footer-col ul {
+    list-style: none;
+}
+
+.footer-col ul li {
+    margin-bottom: 8px;
+}
+
 .footer-social {
     display: flex;
     gap: 12px;
@@ -678,7 +687,6 @@ nav a.active::after {
     justify-content: center;
     border-radius: 50%;
     background: #111;
-    color: #fff;
     text-decoration: none;
     transition: 0.3s;
 }
@@ -687,7 +695,119 @@ nav a.active::after {
     font-size: 18px;
 }
 
-.social-icon:hover {
-    background: #6c5ce7;
+.footer-col .social-icon {
+    color: #fff;
+}
+
+.footer-col .social-icon:hover {
+    background: #00f5c4;
+    color: #000;
     transform: translateY(-3px);
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    border-top: 1px solid #111;
+    padding-top: 20px;
+    font-size: 13px;
+    color: #777;
+}
+
+/* ================= TOAST ================= */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(45deg, #00f5c4, #7b2ff7);
+    color: black;
+    padding: 12px 20px;
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: 0.4s;
+    z-index: 9999;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+    header {
+        padding: 16px 20px;
+    }
+
+    .hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 120px 20px 80px;
+    }
+
+    .left h1 {
+        font-size: 32px;
+    }
+
+    .social,
+    .btn-group {
+        justify-content: center;
+    }
+
+    .right {
+        margin-top: 30px;
+    }
+
+    .section {
+        padding: 80px 20px;
+    }
+
+    .about-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .about-right {
+        text-align: center;
+    }
+
+    .contact-wrapper {
+        flex-direction: column;
+    }
+
+    .footer {
+        padding: 60px 20px 20px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-social {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 700px) {
+    .project-container {
+        grid-template-columns: 1fr;
+    }
+
+    nav a {
+        margin: 0 8px;
+        font-size: 14px;
+    }
+}
+
+/* ================= REDUCED MOTION ================= */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
 }
