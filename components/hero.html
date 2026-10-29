@@ -13,12 +13,13 @@
 
     <!-- Canonical URL & Open Graph -->
     <link rel="canonical" href="https://luxy-cripto.github.io/portfolio/">
-    <meta property="og:title" content="Wandi Wijaya | Web Developer">
-    <meta property="og:description" content="Portofolio resmi Wandi Wijaya. Menampilkan proyek web development, Laravel, dan aplikasi.">
+    <meta property="og:title" content="Wandi Wijaya | Web Developer & Software Engineer">
+    <meta property="og:description" content="Portofolio resmi Wandi Wijaya. Menampilkan proyek web development, Laravel, dan aplikasi web modern.">
     <meta property="og:url" content="https://luxy-cripto.github.io/portfolio/">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="https://luxy-cripto.github.io/portfolio/assets/fotosaya.jpeg">
 
-    <!-- JSON-LD Structured Data (Agar Google Mengenali Biodatamu) -->
+    <!-- JSON-LD Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -27,26 +28,47 @@
       "alternateName": "Wandi Developer Pratama",
       "jobTitle": "Web Developer",
       "url": "https://luxy-cripto.github.io/portfolio/",
-      "email": "mailto:wandiwijaya578@email.com",
+      "email": "mailto:wandiwijaya578@gmail.com",
       "sameAs": [
         "https://github.com/Luxy-cripto"
       ],
       "knowsAbout": [
         "Web Development",
-        "HTML",
-        "CSS",
+        "HTML5",
+        "CSS3",
         "JavaScript",
         "Laravel",
         "PHP",
-        "MySQL"
+        "MySQL",
+        "Vue.js",
+        "Tailwind CSS"
       ]
     }
     </script>
 
-    <!-- Hubungkan File CSS Kamu Di Sini -->
+    <!-- Font & Icon Dependencies -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">Wandi<span>.dev</span></a>
+            <nav class="nav-links">
+                <a href="#home" class="active">Beranda</a>
+                <a href="#about">Tentang</a>
+                <a href="#project">Proyek</a>
+                <a href="#contact">Kontak</a>
+            </nav>
+        </div>
+    </header>
 
     <!-- HERO SECTION -->
     <section id="home" class="hero blur-bg">
@@ -56,23 +78,23 @@
 
             <h1>
                 Wandi Developer <br>
-                Pratama
+                <span class="gradient-text">Pratama</span>
             </h1>
 
             <h3>
                 Seorang <br>
-                <span id="typing" class="highlight"></span>
+                <span id="typing" class="highlight">Web Developer</span>
             </h3>
 
             <p class="desc">
-                Saya membantu bisnis dan individu mengubah ide menjadi solusi digital yang indah dan berfungsi.
+                Saya membantu bisnis dan individu mengubah ide menjadi solusi digital yang indah, responsif, dan berkinerja tinggi.
             </p>
 
             <div class="social">
-                <i>🌐</i>
-                <i>💼</i>
-                <i>📷</i>
-                <i>🎵</i>
+                <a href="https://github.com/Luxy-cripto" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" title="TikTok"><i class="fab fa-tiktok"></i></a>
             </div>
 
             <div class="btn-group">
@@ -84,14 +106,14 @@
         <!-- RIGHT -->
         <div class="right">
             <div class="card floating">
-                <img src="assets/fotosaya.jpeg" alt="profile">
+                <img src="assets/fotosaya.jpeg" alt="Wandi Wijaya - Web Developer" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80'">
 
                 <div class="card-overlay">
                     <div>
                         <p>@wandi.dev</p>
-                        <small>Online</small>
+                        <small class="status-online"><span class="dot"></span> Online</small>
                     </div>
-                    <button>Contact Me</button>
+                    <a href="#contact" class="btn-sm">Contact Me</a>
                 </div>
             </div>
         </div>
@@ -103,7 +125,7 @@
             <!-- LEFT IMAGE -->
             <div class="about-left">
                 <div class="about-card floating">
-                    <img src="assets/fotosaya.jpeg" alt="about">
+                    <img src="assets/fotosaya.jpeg" alt="Wandi Wijaya Profile" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80'">
                 </div>
             </div>
 
@@ -112,30 +134,41 @@
                 <h2>Tentang Saya</h2>
 
                 <p>
-                    Saya adalah seorang Web Developer yang fokus pada pembuatan website modern, 
-                    responsif, dan memiliki user experience yang baik.
+                    Saya adalah seorang Web Developer & Software Engineer yang berfokus pada pembuatan aplikasi web modern, responsif, berarsitektur rapi, serta mengutamakan pengalaman pengguna (User Experience) yang optimal.
                 </p>
 
                 <!-- SKILLS -->
                 <div class="skills">
                     <div class="skill">
-                        <p>HTML</p>
+                        <div class="skill-info">
+                            <p>HTML5 & CSS3</p>
+                            <span>90%</span>
+                        </div>
                         <div class="bar"><span style="width: 90%"></span></div>
                     </div>
 
                     <div class="skill">
-                        <p>CSS</p>
-                        <div class="bar"><span style="width: 50%"></span></div>
+                        <div class="skill-info">
+                            <p>JavaScript (ES6+)</p>
+                            <span>75%</span>
+                        </div>
+                        <div class="bar"><span style="width: 75%"></span></div>
                     </div>
 
                     <div class="skill">
-                        <p>JavaScript</p>
-                        <div class="bar"><span style="width: 70%"></span></div>
-                    </div>
-
-                    <div class="skill">
-                        <p>Laravel</p>
+                        <div class="skill-info">
+                            <p>PHP & Laravel</p>
+                            <span>90%</span>
+                        </div>
                         <div class="bar"><span style="width: 90%"></span></div>
+                    </div>
+
+                    <div class="skill">
+                        <div class="skill-info">
+                            <p>MySQL & Database Design</p>
+                            <span>85%</span>
+                        </div>
+                        <div class="bar"><span style="width: 85%"></span></div>
                     </div>
                 </div>
             </div>
@@ -145,57 +178,66 @@
     <!-- PROJECT SECTION -->
     <section id="project" class="section project">
         <h2 class="section-title">Proyek Saya</h2>
-        <p class="section-subtitle">Beberapa project terbaik yang pernah saya kerjakan</p>
+        <p class="section-subtitle">Beberapa hasil karya dan sistem yang pernah saya bangun</p>
 
         <div class="project-container">
-            <!-- PROJECT 1 -->
+            <!-- PROJECT 1: E-Commerce Store -->
             <div class="project-card">
-                <img src="https://picsum.photos/400/300?1" alt="project">
+                <div class="project-img-wrapper">
+                    <img src="assets/project-ecommerce.jpg" alt="Website Toko Online Laravel" onerror="this.src='https://images.unsplash.com/photo-1556742049-0a67d264356a?auto=format&fit=crop&w=800&q=80'">
+                </div>
 
                 <div class="project-overlay">
                     <div class="tags">
                         <span>Laravel</span>
                         <span>MySQL</span>
+                        <span>Tailwind</span>
                     </div>
 
                     <h3>Website Toko Online</h3>
-                    <p>Sistem e-commerce lengkap dengan dashboard admin</p>
+                    <p>Sistem e-commerce lengkap dengan fitur keranjang belanja, manajemen produk, dan dashboard admin.</p>
 
-                    <a href="#" class="btn-small">Lihat Detail</a>
+                    <a href="https://github.com/Luxy-cripto" target="_blank" rel="noopener noreferrer" class="btn-small">Lihat Detail <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
 
-            <!-- PROJECT 2 -->
+            <!-- PROJECT 2: POS Cashier Application -->
             <div class="project-card">
-                <img src="https://picsum.photos/400/300?2" alt="project">
+                <div class="project-img-wrapper">
+                    <img src="assets/project-pos.jpg" alt="Aplikasi Kasir POS" onerror="this.src='https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=800&q=80'">
+                </div>
 
                 <div class="project-overlay">
                     <div class="tags">
                         <span>PHP</span>
+                        <span>MySQL</span>
                         <span>POS</span>
                     </div>
 
-                    <h3>Aplikasi Kasir</h3>
-                    <p>Aplikasi kasir modern dengan laporan otomatis</p>
+                    <h3>Aplikasi Kasir (Point of Sale)</h3>
+                    <p>Aplikasi kasir bisnis modern yang dilengkapi laporan penjualan otomatis dan manajemen stok barang.</p>
 
-                    <a href="#" class="btn-small">Lihat Detail</a>
+                    <a href="https://github.com/Luxy-cripto" target="_blank" rel="noopener noreferrer" class="btn-small">Lihat Detail <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
 
-            <!-- PROJECT 3 -->
+            <!-- PROJECT 3: Portfolio Website -->
             <div class="project-card">
-                <img src="https://picsum.photos/400/300?3" alt="project">
+                <div class="project-img-wrapper">
+                    <img src="assets/project-portfolio.jpg" alt="Interactive Portfolio Website" onerror="this.src='https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80'">
+                </div>
 
                 <div class="project-overlay">
                     <div class="tags">
-                        <span>HTML</span>
-                        <span>JS</span>
+                        <span>HTML5</span>
+                        <span>CSS3</span>
+                        <span>JavaScript</span>
                     </div>
 
-                    <h3>Portfolio Website</h3>
-                    <p>Website portfolio modern dengan animasi</p>
+                    <h3>Portfolio Interactive Web</h3>
+                    <p>Website portofolio interaktif dengan desain dark glassmorphism, animasi responsif, dan SEO teroptimasi.</p>
 
-                    <a href="#" class="btn-small">Lihat Detail</a>
+                    <a href="https://github.com/Luxy-cripto/portfolio" target="_blank" rel="noopener noreferrer" class="btn-small">Lihat Detail <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>
@@ -209,56 +251,72 @@
         <div class="contact-wrapper">
             <!-- FORM CARD -->
             <div class="contact-card">
-                <form class="contact-form" action="#">
+                <form class="contact-form" action="#" method="POST">
                     <div class="input-group">
-                        <input type="text" required>
-                        <label>Nama Lengkap</label>
+                        <input type="text" name="name" id="name" required>
+                        <label for="name">Nama Lengkap</label>
                     </div>
 
                     <div class="input-group">
-                        <input type="email" required>
-                        <label>Email</label>
+                        <input type="email" name="email" id="email" required>
+                        <label for="email">Email</label>
                     </div>
 
                     <div class="input-group">
-                        <textarea rows="5" required></textarea>
-                        <label>Pesan</label>
+                        <textarea name="message" id="message" rows="5" required></textarea>
+                        <label for="message">Pesan</label>
                     </div>
 
-                    <button type="submit" class="btn primary">Kirim Pesan</button>
+                    <button type="submit" class="btn primary">
+                        <i class="fas fa-paper-plane"></i> Kirim Pesan
+                    </button>
                 </form>
             </div>
 
             <!-- INFO CARD -->
             <div class="contact-info-card">
-                <h3>Kontak Saya</h3>
+                <h3>Informasi Kontak</h3>
 
                 <div class="info-item">
-                    <span>📧</span>
-                    <p>wandiwijaya578@email.com</p>
+                    <span class="icon-box"><i class="fas fa-envelope"></i></span>
+                    <div>
+                        <small>Email</small>
+                        <p>wandiwijaya578@gmail.com</p>
+                    </div>
                 </div>
 
                 <div class="info-item">
-                    <span>📱</span>
-                    <p>0131192169</p>
+                    <span class="icon-box"><i class="fas fa-phone"></i></span>
+                    <div>
+                        <small>Telepon / WhatsApp</small>
+                        <p>+62 813-1192-169</p>
+                    </div>
                 </div>
 
                 <div class="info-item">
-                    <span>📍</span>
-                    <p>Indonesia</p>
+                    <span class="icon-box"><i class="fas fa-location-dot"></i></span>
+                    <div>
+                        <small>Lokasi</small>
+                        <p>Bandung, West Java, Indonesia</p>
+                    </div>
                 </div>
 
                 <div class="contact-social">
-                    <a href="#">🌐</a>
-                    <a href="#">💼</a>
-                    <a href="#">📷</a>
-                    <a href="#">🎵</a>
+                    <a href="https://github.com/Luxy-cripto" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" title="TikTok"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Script Animasi / Typing effect (Jika Ada) -->
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p>&copy; 2026 <strong>Wandi Wijaya</strong>. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Script Animasi & Typing Effect -->
     <script src="script.js"></script>
 </body>
 </html>
