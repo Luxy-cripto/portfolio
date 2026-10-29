@@ -1,24 +1,17 @@
 // ==============================
-// STATE CONTROL (ANTI BUG)
-// ==============================
-let typingStarted = false;
-
-// ==============================
 // LOAD HTML COMPONENT (PARTIAL)
 // ==============================
 async function loadComponent(id, file) {
+    const target = document.getElementById(id);
+    if (!target) {
+        console.warn(`Elemen #${id} tidak ditemukan`);
+        return;
+    }
+
     try {
         const res = await fetch(file);
-
-        if (!res.ok) {
-            throw new Error(`Gagal load ${file}`);
-        }
-
-        const html = await res.text();
-        document.getElementById(id).innerHTML = html;
-
-        console.log(`${id} loaded`);
-
+        if (!res.ok) throw new Error(`Gagal load ${file} (${res.status})`);
+        target.innerHTML = await res.text();
     } catch (err) {
         console.error("ERROR:", err);
     }
@@ -26,42 +19,42 @@ async function loadComponent(id, file) {
 
 
 // ==============================
-// TYPING EFFECT (FIXED)
+// TYPING EFFECT
 // ==============================
+let typingStarted = false;
+
 function startTyping() {
-    if (typingStarted) return; // ❌ cegah double run
+    const el = document.getElementById("typing");
+    if (!el || typingStarted) return;
     typingStarted = true;
 
-    const text = ["Web Developer", "UI Designer", "Laravel Dev"];
+    const words = ["Web Developer", "UI Designer", "Laravel Dev"];
     let i = 0;
     let j = 0;
-    let del = false;
+    let deleting = false;
 
     function type() {
-        const el = document.getElementById("typing");
-        if (!el) return; // ❌ stop kalau elemen hilang
+        const word = words[i];
 
-        let current = text[i].substring(0, j);
-        el.innerHTML = current;
+        j += deleting ? -1 : 1;
+        el.textContent = word.substring(0, j);
 
-        if (!del) {
-            j++;
-        } else {
-            j--;
-        }
-
-        if (j === text[i].length) {
-            del = true;
-            setTimeout(type, 800);
+        // selesai mengetik -> jeda, lalu mulai menghapus
+        if (!deleting && j === word.length) {
+            deleting = true;
+            setTimeout(type, 1200);
             return;
         }
 
-        if (j === 0 && del) {
-            del = false;
-            i = (i + 1) % text.length;
+        // selesai menghapus -> pindah ke kata berikutnya
+        if (deleting && j === 0) {
+            deleting = false;
+            i = (i + 1) % words.length;
+            setTimeout(type, 400);
+            return;
         }
 
-        setTimeout(type, del ? 60 : 100);
+        setTimeout(type, deleting ? 60 : 100);
     }
 
     type();
@@ -72,28 +65,24 @@ function startTyping() {
 // NAVBAR ACTIVE SCROLL
 // ==============================
 function handleNavbarScroll() {
-    const sections = document.querySelectorAll("section");
-    const navLinks = document.querySelectorAll("nav a");
+    const sections = document.querySelectorAll("section[id]");
+    const navLinks = document.querySelectorAll("nav a[href^='#']");
 
-    window.addEventListener("scroll", () => {
+    function update() {
         let current = "";
 
         sections.forEach(sec => {
-            const sectionTop = sec.offsetTop - 120;
-
-            if (window.scrollY >= sectionTop) {
-                current = sec.getAttribute("id");
-            }
+            const top = sec.getBoundingClientRect().top + window.scrollY - 120;
+            if (window.scrollY >= top) current = sec.id;
         });
 
         navLinks.forEach(link => {
-            link.classList.remove("active");
-
-            if (link.getAttribute("href")?.includes(current)) {
-                link.classList.add("active");
-            }
+            link.classList.toggle("active", link.getAttribute("href") === `#${current}`);
         });
-    });
+    }
+
+    window.addEventListener("scroll", update, { passive: true });
+    update();
 }
 
 
@@ -103,24 +92,21 @@ function handleNavbarScroll() {
 function scrollAnimation() {
     const sections = document.querySelectorAll(".section");
 
-    function reveal() {
-        const trigger = window.innerHeight * 0.85;
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
 
-        sections.forEach(sec => {
-            const top = sec.getBoundingClientRect().top;
+            entry.target.classList.add("show");
 
-            if (top < trigger) {
-                sec.classList.add("show");
-
-                if (sec.classList.contains("about")) {
-                    animateSkills();
-                }
+            if (entry.target.classList.contains("about")) {
+                animateSkills();
             }
-        });
-    }
 
-    window.addEventListener("scroll", reveal);
-    reveal();
+            observer.unobserve(entry.target); // cukup sekali
+        });
+    }, { rootMargin: "0px 0px -15% 0px", threshold: 0 });
+
+    sections.forEach(sec => observer.observe(sec));
 }
 
 
@@ -128,13 +114,9 @@ function scrollAnimation() {
 // SKILL BAR ANIMATION
 // ==============================
 function animateSkills() {
-    const skills = document.querySelectorAll(".bar span");
-
-    skills.forEach(skill => {
-        const width = skill.getAttribute("data-width");
-        if (width) {
-            skill.style.width = width;
-        }
+    document.querySelectorAll(".bar span").forEach(skill => {
+        const width = skill.dataset.width;
+        if (width) skill.style.width = width;
     });
 }
 
@@ -143,103 +125,114 @@ function animateSkills() {
 // CURSOR GLOW EFFECT
 // ==============================
 function cursorGlow() {
+    // tidak perlu di layar sentuh
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
     const glow = document.createElement("div");
 
-    glow.style.position = "fixed";
-    glow.style.width = "20px";
-    glow.style.height = "20px";
-    glow.style.borderRadius = "50%";
-    glow.style.background = "cyan";
-    glow.style.pointerEvents = "none";
-    glow.style.filter = "blur(15px)";
-    glow.style.zIndex = "9999";
+    Object.assign(glow.style, {
+        position: "fixed",
+        top: "0",
+        left: "0",
+        width: "20px",
+        height: "20px",
+        borderRadius: "50%",
+        background: "cyan",
+        pointerEvents: "none",
+        filter: "blur(15px)",
+        zIndex: "9999",
+        willChange: "transform"
+    });
 
     document.body.appendChild(glow);
 
     document.addEventListener("mousemove", e => {
-        glow.style.left = e.clientX + "px";
-        glow.style.top = e.clientY + "px";
+        glow.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
     });
 }
+
+
+// ==============================
+// TOAST
+// ==============================
+function showToast(message) {
+    let toast = document.getElementById("toast");
+
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "toast";
+        toast.className = "toast";
+        document.body.appendChild(toast);
+    }
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => toast.classList.remove("show"), 3000);
+}
+
+
+// ==============================
+// EMAILJS INIT
+// ==============================
+if (typeof emailjs !== "undefined") {
+    emailjs.init("8vBWLuPzO9NkU9xqR");
+} else {
+    console.error("SDK EmailJS belum dimuat. Cek tag <script> di index.html");
+}
+
+
+// ==============================
+// CONTACT FORM
+// ==============================
+document.addEventListener("submit", async (e) => {
+    const form = e.target;
+    if (!form.classList.contains("contact-form")) return;
+
+    e.preventDefault();
+
+    if (typeof emailjs === "undefined") {
+        showToast("Layanan email belum siap ❌");
+        return;
+    }
+
+    const btn = form.querySelector("button[type='submit']");
+    btn.textContent = "Mengirim...";
+    btn.disabled = true;
+
+    try {
+        await emailjs.send("service_86d0oyp", "template_abobcm2", {
+            name: form.querySelector("input[type='text']").value.trim(),
+            email: form.querySelector("input[type='email']").value.trim(),
+            message: form.querySelector("textarea").value.trim()
+        });
+
+        showToast("Pesan berhasil dikirim 🚀");
+        form.reset();
+    } catch (err) {
+        console.error("EmailJS error:", err);
+        showToast("Gagal mengirim ❌");
+    } finally {
+        btn.textContent = "Kirim Pesan";
+        btn.disabled = false;
+    }
+});
 
 
 // ==============================
 // INIT SEMUA
 // ==============================
 document.addEventListener("DOMContentLoaded", async () => {
+    // muat komponen secara paralel, lalu init setelah semuanya siap
+    await Promise.all([
+        loadComponent("navbar", "components/navbar.html"),
+        loadComponent("hero", "components/hero.html"),
+        loadComponent("footer", "components/footer.html")
+    ]);
 
-    // Load components
-    await loadComponent("navbar", "components/navbar.html");
-    await loadComponent("hero", "components/hero.html");
-    await loadComponent("footer", "components/footer.html");
-
-    // Init after DOM ready
-    setTimeout(() => {
-        handleNavbarScroll();
-        scrollAnimation();
-        startTyping(); // ✅ hanya sekali di sini
-    }, 500);
-
+    handleNavbarScroll();
+    scrollAnimation();
+    startTyping();
     cursorGlow();
 });
-
-
-// ==============================
-// EMAILJS INIT
-// ==============================
-(function() {
-    emailjs.init("8vBWLuPzO9NkU9xqR");
-})();
-
-
-// ==============================
-// CONTACT FORM
-// ==============================
-document.addEventListener("submit", function(e) {
-    if (e.target.classList.contains("contact-form")) {
-        e.preventDefault();
-
-        const btn = e.target.querySelector("button");
-        btn.innerText = "Mengirim...";
-        btn.disabled = true;
-
-        const name = e.target.querySelector("input[type='text']").value;
-        const email = e.target.querySelector("input[type='email']").value;
-        const message = e.target.querySelector("textarea").value;
-
-        emailjs.send("service_86d0oyp", "template_abobcm2", {
-            name,
-            email,
-            message
-        })
-        .then(() => {
-            showToast("Pesan berhasil dikirim 🚀");
-            e.target.reset();
-        })
-        .catch(() => {
-            showToast("Gagal mengirim ❌");
-        })
-        .finally(() => {
-            btn.innerText = "Kirim Pesan";
-            btn.disabled = false;
-        });
-    }
-});
-
-console.log("JS jalan");
-
-// ==============================
-// TOAST
-// ==============================
-function showToast(message) {
-    const toast = document.getElementById("toast");
-
-    if (!toast) return;
-
-    toast.innerText = message;
-    toast.classList.add("show");
-
-    setTimeout(() => {
-        toast.classList.remove("show");
-    }, 3000);
-}
