@@ -3,24 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Wandi</title>
-    <link rel="icon" href="assets/icon2.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Meta SEO Utama untuk Pencarian Google -->
+    <title>Wandi Wijaya (Luxy-cripto) | Software Engineer & Web Developer</title>
+    <meta name="description" content="Portofolio resmi Wandi Wijaya (Luxy-cripto) — Software Engineer & Web Developer dari Bandung yang berfokus pada Laravel, Vue.js, Flutter, dan Python.">
+    <meta name="keywords" content="Wandi Wijaya, Luxy-cripto, Wandi Developer Pratama, Web Developer Bandung, Software Engineer, Laravel, Flutter, Python, SMK Assalaam Bandung">
+    <meta name="author" content="Wandi Wijaya">
+    <meta name="robots" content="index, follow">
 
-    <!-- CSS -->
+    <!-- Canonical URL & Open Graph -->
+    <link rel="canonical" href="https://luxy-cripto.github.io/portfolio/">
+    <meta property="og:title" content="Wandi Wijaya (Luxy-cripto) | Software Engineer">
+    <meta property="og:description" content="Portofolio resmi Wandi Wijaya. Menampilkan proyek Web, Mobile App (Flutter), dan AI Tooling.">
+    <meta property="og:url" content="https://luxy-cripto.github.io/portfolio/">
+    <meta property="og:type" content="website">
+
+    <!-- Favicon & FontAwesome Icon -->
+    <link rel="icon" href="assets/icon2.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Stylesheet CSS Utama -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- JSON-LD Structured Data (Google Indexing) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Wandi Wijaya",
+      "alternateName": ["Luxy-cripto", "Wandi Developer Pratama"],
+      "jobTitle": "Software Engineer & Web Developer",
+      "url": "https://luxy-cripto.github.io/portfolio/",
+      "email": "mailto:wandiwijaya578@email.com",
+      "alumniOf": "SMK Assalaam Bandung",
+      "sameAs": [
+        "https://github.com/Luxy-cripto"
+      ],
+      "knowsAbout": [
+        "Software Engineering",
+        "Web Development",
+        "Laravel",
+        "Vue.js",
+        "Flutter",
+        "Python",
+        "MySQL"
+      ]
+    }
+    </script>
 </head>
 <body>
 
-    <!-- LOAD COMPONENT -->
+    <!-- CONTAINER LOAD COMPONENT -->
     <div id="navbar"></div>
     <div id="hero"></div>
-    <div id="footer"></div><!-- optional -->
+    <div id="footer"></div>
 
-    <!-- JS -->
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast" class="toast">Pesan terkirim 🚀</div>
+
+    <!-- SCRIPT JS -->
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script src="js/script.js"></script>
 
 </body>
-<div id="toast" class="toast">Pesan terkirim 🚀</div>
 </html>
