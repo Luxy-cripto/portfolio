@@ -1,26 +1,23 @@
-// ==============================
-// LOAD HTML COMPONENT (PARTIAL)
-// ==============================
+// ==========================================
+// 1. LOAD HTML COMPONENT (PARTIALS)
+// ==========================================
 async function loadComponent(id, file) {
     const target = document.getElementById(id);
-    if (!target) {
-        console.warn(`Elemen #${id} tidak ditemukan`);
-        return;
-    }
+    if (!target) return;
 
     try {
         const res = await fetch(file);
-        if (!res.ok) throw new Error(`Gagal load ${file} (${res.status})`);
+        if (!res.ok) throw new Error(`Gagal memuat ${file} (${res.status})`);
         target.innerHTML = await res.text();
     } catch (err) {
-        console.error("ERROR:", err);
+        console.warn(`[Component Warning] ${err.message}`);
     }
 }
 
 
-// ==============================
-// TYPING EFFECT
-// ==============================
+// ==========================================
+// 2. TYPING EFFECT (ENHANCED)
+// ==========================================
 let typingStarted = false;
 
 function startTyping() {
@@ -28,25 +25,32 @@ function startTyping() {
     if (!el || typingStarted) return;
     typingStarted = true;
 
-    const words = ["Web Developer", "UI Designer", "Laravel Dev"];
+    // Kata-kata diperbanyak sesuai dengan keahlian utama
+    const words = [
+        "Software Engineer",
+        "Full-Stack Developer",
+        "Laravel Specialist",
+        "Flutter Developer",
+        "Python Enthusiast"
+    ];
+    
     let i = 0;
     let j = 0;
     let deleting = false;
 
     function type() {
         const word = words[i];
-
         j += deleting ? -1 : 1;
         el.textContent = word.substring(0, j);
 
-        // selesai mengetik -> jeda, lalu mulai menghapus
+        // Selesai mengetik -> jeda sebentar, lalu hapus
         if (!deleting && j === word.length) {
             deleting = true;
-            setTimeout(type, 1200);
+            setTimeout(type, 1500);
             return;
         }
 
-        // selesai menghapus -> pindah ke kata berikutnya
+        // Selesai menghapus -> ganti ke kata berikutnya
         if (deleting && j === 0) {
             deleting = false;
             i = (i + 1) % words.length;
@@ -54,31 +58,45 @@ function startTyping() {
             return;
         }
 
-        setTimeout(type, deleting ? 60 : 100);
+        setTimeout(type, deleting ? 50 : 90);
     }
 
     type();
 }
 
 
-// ==============================
-// NAVBAR ACTIVE SCROLL
-// ==============================
+// ==========================================
+// 3. NAVBAR ACTIVE & SCROLL MONITOR
+// ==========================================
 function handleNavbarScroll() {
     const sections = document.querySelectorAll("section[id]");
     const navLinks = document.querySelectorAll("nav a[href^='#']");
 
     function update() {
         let current = "";
+        const scrollPosition = window.scrollY + 150;
 
         sections.forEach(sec => {
-            const top = sec.getBoundingClientRect().top + window.scrollY - 120;
-            if (window.scrollY >= top) current = sec.id;
+            const top = sec.offsetTop;
+            const height = sec.offsetHeight;
+            if (scrollPosition >= top && scrollPosition < top + height) {
+                current = sec.id;
+            }
         });
 
         navLinks.forEach(link => {
             link.classList.toggle("active", link.getAttribute("href") === `#${current}`);
         });
+
+        // Toggle tombol Back to Top jika ada di DOM
+        const backToTopBtn = document.getElementById("backToTop");
+        if (backToTopBtn) {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add("show");
+            } else {
+                backToTopBtn.classList.remove("show");
+            }
+        }
     }
 
     window.addEventListener("scroll", update, { passive: true });
@@ -86,11 +104,34 @@ function handleNavbarScroll() {
 }
 
 
-// ==============================
-// SCROLL ANIMATION
-// ==============================
+// ==========================================
+// 4. SMOOTH SCROLL ANCHOR LINKS
+// ==========================================
+function setupSmoothScroll() {
+    document.addEventListener("click", (e) => {
+        const anchor = e.target.closest("a[href^='#']");
+        if (!anchor) return;
+
+        const targetId = anchor.getAttribute("href");
+        if (targetId === "#") return;
+
+        const targetEl = document.querySelector(targetId);
+        if (targetEl) {
+            e.preventDefault();
+            targetEl.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        }
+    });
+}
+
+
+// ==========================================
+// 5. SCROLL ANIMATION & INTERSECTION OBSERVER
+// ==========================================
 function scrollAnimation() {
-    const sections = document.querySelectorAll(".section");
+    const sections = document.querySelectorAll(".section, .hero");
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -98,63 +139,124 @@ function scrollAnimation() {
 
             entry.target.classList.add("show");
 
-            if (entry.target.classList.contains("about")) {
+            // Picu animasi skill bar saat section tentang/skills muncul
+            if (entry.target.classList.contains("about") || entry.target.id === "about") {
                 animateSkills();
             }
 
-            observer.unobserve(entry.target); // cukup sekali
+            observer.unobserve(entry.target); // Cukup jalankan sekali
         });
-    }, { rootMargin: "0px 0px -15% 0px", threshold: 0 });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
 
     sections.forEach(sec => observer.observe(sec));
 }
 
 
-// ==============================
-// SKILL BAR ANIMATION
-// ==============================
+// ==========================================
+// 6. SKILL BAR ANIMATION
+// ==========================================
 function animateSkills() {
     document.querySelectorAll(".bar span").forEach(skill => {
-        const width = skill.dataset.width;
-        if (width) skill.style.width = width;
+        // Ambil nilai lebar dari data-width atau langsung dari gaya inline
+        const width = skill.dataset.width || skill.style.width;
+        if (width) {
+            skill.style.width = "0%";
+            setTimeout(() => {
+                skill.style.width = width;
+            }, 100);
+        }
     });
 }
 
 
-// ==============================
-// CURSOR GLOW EFFECT
-// ==============================
+// ==========================================
+// 7. CURSOR GLOW EFFECT
+// ==========================================
 function cursorGlow() {
-    // tidak perlu di layar sentuh
+    // Lewati di perangkat layar sentuh
     if (window.matchMedia("(pointer: coarse)").matches) return;
 
     const glow = document.createElement("div");
+    glow.id = "cursorGlow";
 
     Object.assign(glow.style, {
         position: "fixed",
         top: "0",
         left: "0",
-        width: "20px",
-        height: "20px",
+        width: "24px",
+        height: "24px",
         borderRadius: "50%",
-        background: "cyan",
+        background: "#00f5c4",
         pointerEvents: "none",
-        filter: "blur(15px)",
+        filter: "blur(18px)",
+        opacity: "0.6",
         zIndex: "9999",
-        willChange: "transform"
+        willChange: "transform",
+        transition: "transform 0.08s ease-out"
     });
 
     document.body.appendChild(glow);
 
     document.addEventListener("mousemove", e => {
-        glow.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
+        glow.style.transform = `translate(${e.clientX - 12}px, ${e.clientY - 12}px)`;
     });
 }
 
 
-// ==============================
-// TOAST
-// ==============================
+// ==========================================
+// 8. BACK TO TOP BUTTON GENERATOR
+// ==========================================
+function createBackToTopButton() {
+    if (document.getElementById("backToTop")) return;
+
+    const btn = document.createElement("button");
+    btn.id = "backToTop";
+    btn.innerHTML = `<i class="fas fa-arrow-up"></i>`;
+    btn.setAttribute("aria-label", "Kembali ke atas");
+
+    Object.assign(btn.style, {
+        position: "fixed",
+        bottom: "30px",
+        right: "30px",
+        width: "45px",
+        height: "45px",
+        borderRadius: "50%",
+        background: "linear-gradient(45deg, #00f5c4, #7b2ff7)",
+        color: "#020617",
+        border: "none",
+        cursor: "pointer",
+        fontSize: "18px",
+        boxShadow: "0 0 15px rgba(0, 245, 196, 0.4)",
+        opacity: "0",
+        visibility: "hidden",
+        transition: "all 0.3s ease",
+        zIndex: "999"
+    });
+
+    // Tambahkan class CSS khusus untuk transisi
+    const styleTag = document.createElement("style");
+    styleTag.textContent = `
+        #backToTop.show {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        #backToTop:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 0 25px rgba(0, 245, 196, 0.7);
+        }
+    `;
+    document.head.appendChild(styleTag);
+    document.body.appendChild(btn);
+
+    btn.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+}
+
+
+// ==========================================
+// 9. TOAST NOTIFICATION SYSTEM
+// ==========================================
 function showToast(message) {
     let toast = document.getElementById("toast");
 
@@ -169,70 +271,83 @@ function showToast(message) {
     toast.classList.add("show");
 
     clearTimeout(showToast.timer);
-    showToast.timer = setTimeout(() => toast.classList.remove("show"), 3000);
+    showToast.timer = setTimeout(() => toast.classList.remove("show"), 3500);
 }
 
 
-// ==============================
-// EMAILJS INIT
-// ==============================
+// ==========================================
+// 10. EMAILJS INITIALIZATION
+// ==========================================
 if (typeof emailjs !== "undefined") {
     emailjs.init("8vBWLuPzO9NkU9xqR");
 } else {
-    console.error("SDK EmailJS belum dimuat. Cek tag <script> di index.html");
+    console.warn("SDK EmailJS belum dimuat di HTML. Cek tag <script> EmailJS.");
 }
 
 
-// ==============================
-// CONTACT FORM
-// ==============================
+// ==========================================
+// 11. CONTACT FORM HANDLER
+// ==========================================
 document.addEventListener("submit", async (e) => {
     const form = e.target;
-    if (!form.classList.contains("contact-form")) return;
+    if (!form.classList.contains("contact-form") && form.id !== "contactForm") return;
 
     e.preventDefault();
 
     if (typeof emailjs === "undefined") {
-        showToast("Layanan email belum siap ❌");
+        showToast("Layanan email belum terhubung ❌");
         return;
     }
 
+    const nameInput = form.querySelector("input[name='name'], input[type='text']");
+    const emailInput = form.querySelector("input[name='email'], input[type='email']");
+    const messageInput = form.querySelector("textarea[name='message'], textarea");
     const btn = form.querySelector("button[type='submit']");
+
+    if (!nameInput?.value.trim() || !emailInput?.value.trim() || !messageInput?.value.trim()) {
+        showToast("Lengkapi semua kolom pesan! ⚠️");
+        return;
+    }
+
+    const originalBtnText = btn.innerHTML;
     btn.textContent = "Mengirim...";
     btn.disabled = true;
 
     try {
         await emailjs.send("service_86d0oyp", "template_abobcm2", {
-            name: form.querySelector("input[type='text']").value.trim(),
-            email: form.querySelector("input[type='email']").value.trim(),
-            message: form.querySelector("textarea").value.trim()
+            name: nameInput.value.trim(),
+            email: emailInput.value.trim(),
+            message: messageInput.value.trim()
         });
 
-        showToast("Pesan berhasil dikirim 🚀");
+        showToast("Pesan berhasil dikirim ke Wandi! 🚀");
         form.reset();
     } catch (err) {
-        console.error("EmailJS error:", err);
-        showToast("Gagal mengirim ❌");
+        console.error("EmailJS Error:", err);
+        showToast("Gagal mengirim pesan, coba lagi ❌");
     } finally {
-        btn.textContent = "Kirim Pesan";
+        btn.innerHTML = originalBtnText;
         btn.disabled = false;
     }
 });
 
 
-// ==============================
-// INIT SEMUA
-// ==============================
+// ==========================================
+// 12. INITIALIZE ALL ON DOM READY
+// ==========================================
 document.addEventListener("DOMContentLoaded", async () => {
-    // muat komponen secara paralel, lalu init setelah semuanya siap
+    // Muat komponen secara paralel (jika menggunakan pemisah komponen)
     await Promise.all([
         loadComponent("navbar", "components/navbar.html"),
         loadComponent("hero", "components/hero.html"),
         loadComponent("footer", "components/footer.html")
     ]);
 
+    // Jalankan seluruh fitur JavaScript
     handleNavbarScroll();
+    setupSmoothScroll();
     scrollAnimation();
     startTyping();
     cursorGlow();
+    createBackToTopButton();
 });
