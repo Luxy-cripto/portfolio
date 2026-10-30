@@ -63,7 +63,7 @@ function startTyping() {
 
 
 // ==========================================
-// 3. NAVBAR ACTIVE & SCROLL MONITOR
+// 3. NAVBAR ACTIVE & SCROLL MONITOR (PRESISI)
 // ==========================================
 function handleNavbarScroll() {
     const sections = document.querySelectorAll("section[id]");
@@ -71,10 +71,10 @@ function handleNavbarScroll() {
 
     function update() {
         let current = "";
-        const scrollPosition = window.scrollY + 160;
+        const scrollPosition = window.scrollY + 180;
 
         sections.forEach(sec => {
-            const top = sec.offsetTop;
+            const top = sec.getBoundingClientRect().top + window.scrollY;
             const height = sec.offsetHeight;
             if (scrollPosition >= top && scrollPosition < top + height) {
                 current = sec.id;
@@ -101,7 +101,7 @@ function handleNavbarScroll() {
 
 
 // ==========================================
-// 4. SMOOTH SCROLL ANCHOR LINKS
+// 4. SMOOTH SCROLL ANCHOR LINKS WITH OFFSET
 // ==========================================
 function setupSmoothScroll() {
     document.addEventListener("click", (e) => {
@@ -114,9 +114,13 @@ function setupSmoothScroll() {
         const targetEl = document.querySelector(targetId);
         if (targetEl) {
             e.preventDefault();
-            targetEl.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
+            const headerOffset = 80;
+            const elementPosition = targetEl.getBoundingClientRect().top + window.scrollY;
+            const offsetPosition = elementPosition - headerOffset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
             });
         }
     });
@@ -152,12 +156,14 @@ function scrollAnimation() {
 // ==========================================
 function animateSkills() {
     document.querySelectorAll(".bar span").forEach(skill => {
-        const width = skill.dataset.width || skill.style.width;
-        if (width) {
+        const targetWidth = skill.dataset.width || skill.style.width;
+        if (targetWidth) {
             skill.style.width = "0%";
-            setTimeout(() => {
-                skill.style.width = width;
-            }, 100);
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    skill.style.width = targetWidth;
+                }, 150);
+            });
         }
     });
 }
