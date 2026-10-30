@@ -10,13 +10,13 @@ async function loadComponent(id, file) {
         if (!res.ok) throw new Error(`Gagal memuat ${file} (${res.status})`);
         target.innerHTML = await res.text();
     } catch (err) {
-        console.warn(`[Component Warning] ${err.message}`);
+        console.warn(`[Component Info] ${err.message}. Pastikan diakses via HTTP/HTTPS server.`);
     }
 }
 
 
 // ==========================================
-// 2. TYPING EFFECT (ENHANCED)
+// 2. TYPING EFFECT
 // ==========================================
 let typingStarted = false;
 
@@ -25,10 +25,9 @@ function startTyping() {
     if (!el || typingStarted) return;
     typingStarted = true;
 
-    // Kata-kata diperbanyak sesuai dengan keahlian utama
     const words = [
-        "Software Engineer",
         "Full-Stack Developer",
+        "Software Engineer",
         "Laravel Specialist",
         "Flutter Developer",
         "Python Enthusiast"
@@ -43,14 +42,12 @@ function startTyping() {
         j += deleting ? -1 : 1;
         el.textContent = word.substring(0, j);
 
-        // Selesai mengetik -> jeda sebentar, lalu hapus
         if (!deleting && j === word.length) {
             deleting = true;
             setTimeout(type, 1500);
             return;
         }
 
-        // Selesai menghapus -> ganti ke kata berikutnya
         if (deleting && j === 0) {
             deleting = false;
             i = (i + 1) % words.length;
@@ -74,7 +71,7 @@ function handleNavbarScroll() {
 
     function update() {
         let current = "";
-        const scrollPosition = window.scrollY + 150;
+        const scrollPosition = window.scrollY + 160;
 
         sections.forEach(sec => {
             const top = sec.offsetTop;
@@ -88,7 +85,6 @@ function handleNavbarScroll() {
             link.classList.toggle("active", link.getAttribute("href") === `#${current}`);
         });
 
-        // Toggle tombol Back to Top jika ada di DOM
         const backToTopBtn = document.getElementById("backToTop");
         if (backToTopBtn) {
             if (window.scrollY > 300) {
@@ -139,12 +135,11 @@ function scrollAnimation() {
 
             entry.target.classList.add("show");
 
-            // Picu animasi skill bar saat section tentang/skills muncul
             if (entry.target.classList.contains("about") || entry.target.id === "about") {
                 animateSkills();
             }
 
-            observer.unobserve(entry.target); // Cukup jalankan sekali
+            observer.unobserve(entry.target);
         });
     }, { rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
 
@@ -157,7 +152,6 @@ function scrollAnimation() {
 // ==========================================
 function animateSkills() {
     document.querySelectorAll(".bar span").forEach(skill => {
-        // Ambil nilai lebar dari data-width atau langsung dari gaya inline
         const width = skill.dataset.width || skill.style.width;
         if (width) {
             skill.style.width = "0%";
@@ -170,32 +164,34 @@ function animateSkills() {
 
 
 // ==========================================
-// 7. CURSOR GLOW EFFECT
+// 7. CURSOR GLOW EFFECT (DESKTOP ONLY)
 // ==========================================
 function cursorGlow() {
-    // Lewati di perangkat layar sentuh
     if (window.matchMedia("(pointer: coarse)").matches) return;
 
-    const glow = document.createElement("div");
-    glow.id = "cursorGlow";
+    let glow = document.getElementById("cursorGlow");
+    if (!glow) {
+        glow = document.createElement("div");
+        glow.id = "cursorGlow";
 
-    Object.assign(glow.style, {
-        position: "fixed",
-        top: "0",
-        left: "0",
-        width: "24px",
-        height: "24px",
-        borderRadius: "50%",
-        background: "#00f5c4",
-        pointerEvents: "none",
-        filter: "blur(18px)",
-        opacity: "0.6",
-        zIndex: "9999",
-        willChange: "transform",
-        transition: "transform 0.08s ease-out"
-    });
+        Object.assign(glow.style, {
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "24px",
+            height: "24px",
+            borderRadius: "50%",
+            background: "#00f5c4",
+            pointerEvents: "none",
+            filter: "blur(18px)",
+            opacity: "0.6",
+            zIndex: "9999",
+            willChange: "transform",
+            transition: "transform 0.08s ease-out"
+        });
 
-    document.body.appendChild(glow);
+        document.body.appendChild(glow);
+    }
 
     document.addEventListener("mousemove", e => {
         glow.style.transform = `translate(${e.clientX - 12}px, ${e.clientY - 12}px)`;
@@ -233,7 +229,6 @@ function createBackToTopButton() {
         zIndex: "999"
     });
 
-    // Tambahkan class CSS khusus untuk transisi
     const styleTag = document.createElement("style");
     styleTag.textContent = `
         #backToTop.show {
@@ -280,8 +275,6 @@ function showToast(message) {
 // ==========================================
 if (typeof emailjs !== "undefined") {
     emailjs.init("8vBWLuPzO9NkU9xqR");
-} else {
-    console.warn("SDK EmailJS belum dimuat di HTML. Cek tag <script> EmailJS.");
 }
 
 
@@ -336,14 +329,12 @@ document.addEventListener("submit", async (e) => {
 // 12. INITIALIZE ALL ON DOM READY
 // ==========================================
 document.addEventListener("DOMContentLoaded", async () => {
-    // Muat komponen secara paralel (jika menggunakan pemisah komponen)
     await Promise.all([
         loadComponent("navbar", "components/navbar.html"),
         loadComponent("hero", "components/hero.html"),
         loadComponent("footer", "components/footer.html")
     ]);
 
-    // Jalankan seluruh fitur JavaScript
     handleNavbarScroll();
     setupSmoothScroll();
     scrollAnimation();
